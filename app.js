@@ -13,6 +13,13 @@ function Book(title, author, isbn) {
 }
 //UI Constructor
 function UI() {}
+UI.prototype.deleteBook = function (target) {
+  //if clicked target's class name is delete (target will be passed by event.target by remove)
+  if (target.className === "delete") {
+    //target's parent's parent will remove which is tr(row) element'
+    target.parentElement.parentElement.remove();
+  }
+};
 UI.prototype.showAlert = function (message, className) {
   //create a div
   const div = document.createElement("div");
@@ -47,7 +54,6 @@ UI.prototype.addBookToList = function (book) {
   `;
   UIbookList.appendChild(row);
 };
-
 //Event Listeners
 UIbookForm.addEventListener("submit", function (event) {
   //Form values
@@ -65,9 +71,17 @@ UIbookForm.addEventListener("submit", function (event) {
   } else {
     //Add book to list
     ui.addBookToList(book); //ui objects addBook method, like a library.
+    //Show Success
+    ui.showAlert("Book Added", "success");
     //Clear field
     ui.clearFields();
   }
 
+  event.preventDefault();
+});
+UIbookList.addEventListener("click", function (event) {
+  const ui = new UI(); //creating a instance of ui to use its deleteBook and showAlert method
+  ui.deleteBook(event.target); //clicked target will be argument of deleteBook
+  ui.showAlert("Removed successfully", "success");
   event.preventDefault();
 });
